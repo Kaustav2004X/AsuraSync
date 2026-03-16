@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+supabase
+python-jose[cryptography]
+python-multipart
+httpx
+seleniumbase
+apscheduler
+pywebpush
+gspread
+google-auth
+python-dotenv
+pydantic-settings
+pillow
+tenacity
+slowapi
