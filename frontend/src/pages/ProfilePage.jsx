@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api";
 import { supabase } from "../supabase";
 import CropDialog from "../components/CropDialog";
+import NotificationsTab from "../components/NotificationsTab";
 
 const P  = "#7F1CE2";
 const PL = "#A855F7";
@@ -32,7 +33,7 @@ const BANNERS = [
   "linear-gradient(135deg, #0A0010 0%, #4a0080 50%, #7F1CE2 100%)",
 ];
 
-export default function ProfilePage({ user, setUser, series, onLogout }) {
+export default function ProfilePage({ user, setUser, series, setSeries, onLogout }) {
   const [editing, setEditing]           = useState(false);
   const [editName, setEditName]         = useState(user.name);
   const [editBio, setEditBio]           = useState(user.bio || "");
@@ -548,34 +549,7 @@ export default function ProfilePage({ user, setUser, series, onLogout }) {
 
 
       {/* NOTIFICATIONS */}
-      {activeTab === 1 && (
-        <Box sx={{ background:"#12121A", border:`1px solid ${PA(0.15)}`, borderRadius:2, p:{ xs:2, md:3 } }}>
-          <Box sx={{ display:"flex", alignItems:"center", gap:1.5, mb:0.5 }}>
-            <Box sx={{ width:4, height:20, background:`linear-gradient(to bottom, ${P}, ${PL})`, borderRadius:2 }} />
-            <Typography sx={{ fontFamily:"'Bebas Neue', cursive", fontSize:20, color:"#F0EAE0" }}>NOTIFICATION SETTINGS</Typography>
-          </Box>
-          <Typography sx={{ fontSize:13, color:"#9A8AB0", mb:3, ml:1 }}>Control how and when you're notified.</Typography>
-          <SettingRow icon={<NotificationsActive sx={{ fontSize:18 }} />} label="Push Notifications" description="Get notified when new chapters drop" control={<Switch defaultChecked sx={switchSx} />} />
-          <SettingRow icon={<Email sx={{ fontSize:18 }} />} label="Email Digest" description="Weekly summary of new releases" control={<Switch sx={switchSx} />} />
-          <SettingRow icon={<TrendingUp sx={{ fontSize:18 }} />} label="Weekly Report" description="Your reading stats every Sunday" control={<Switch defaultChecked sx={switchSx} />} last />
-          <Divider sx={{ my:2.5, borderColor:PA(0.1) }} />
-          <Box sx={{ display:"flex", alignItems:"center", gap:1.5, mb:1.5 }}>
-            <Box sx={{ width:4, height:16, background:`linear-gradient(to bottom, ${P}, ${PL})`, borderRadius:2 }} />
-            <Typography sx={{ fontFamily:"'Bebas Neue', cursive", fontSize:18, color:"#F0EAE0" }}>PER-SERIES</Typography>
-          </Box>
-          {series.length === 0 ? (
-            <Typography sx={{ fontSize:13, color:"#9A8AB0", py:2 }}>No series in library yet</Typography>
-          ) : series.map(s => (
-            <Box key={s.id} sx={{ display:"flex", alignItems:"center", gap:2, py:1.5, borderBottom:`1px solid ${PA(0.08)}` }}>
-              <Box sx={{ width:36, height:48, borderRadius:1, overflow:"hidden", flexShrink:0 }}>
-                <img src={s.cover} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-              </Box>
-              <Typography sx={{ flex:1, fontSize:13, color:"#F0EAE0", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{s.title}</Typography>
-              <Switch size="small" defaultChecked={s.notifications !== false} sx={switchSx} />
-            </Box>
-          ))}
-        </Box>
-      )}
+      {activeTab === 1 && <NotificationsTab series={series} setSeries={setSeries} />}
 
 
       {/* FIX 5: FAVOURITES — series from props so progress is always current */}

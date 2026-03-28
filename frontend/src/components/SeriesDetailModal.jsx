@@ -186,7 +186,6 @@ export default function SeriesDetailModal({ series, open, onClose, onUpdate }) {
             {[
               ["Source URL",  series.url,       "#A855F7", true],
               ["Status",      series.status,    "#F0EAE0", false],
-              ["Added On",    series.created_at ? new Date(series.created_at).toLocaleDateString() : "—", "#F0EAE0", false],
               ["Notifications", series.notifications ? "Enabled" : "Muted", series.notifications ? "#2ECC71" : "#8A8398", false],
             ].map(([label, value, color, isLink]) => (
               <Box key={label} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 1.5, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>

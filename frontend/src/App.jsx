@@ -54,6 +54,13 @@ export default function App() {
         loadLibrary();
       }
       setLoading(false);
+      
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        console.log("TOKEN:", session.access_token)  // ADD THIS LINE
+      }
+      setLoading(false)
+    })
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {

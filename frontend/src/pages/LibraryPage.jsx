@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box, Typography, Button, TextField, InputAdornment, FormControl,
   Select, MenuItem, Tabs, Tab, IconButton, Chip, LinearProgress,
-  Fade, Grow, Alert, Snackbar,
+  Fade, Grow, Alert, Snackbar, Tooltip, CircularProgress,
 } from "@mui/material";
 import {
   Add, Search, Sort, GridView, ViewList, AutoStories,
   Schedule, CheckCircle, NotificationsActive, FileDownload, ChevronRight,
+  Refresh,
 } from "@mui/icons-material";
 import SeriesCard from "../components/SeriesCard";
 import AddSeriesModal from "../components/AddSeriesModal";
@@ -14,6 +15,21 @@ import SeriesDetailModal from "../components/SeriesDetailModal";
 import ExportModal from "../components/ExportModal";
 import { getProgress, getUpcoming, getStatusColor, getReadingStatus } from "../data";
 import { apiFetch } from "../api";
+
+const COOLDOWN_MS  = 15 * 60 * 1000; // 15 minutes
+const COOLDOWN_KEY = "asurasync_last_refresh";
+
+function getCooldownRemaining() {
+  const last = parseInt(localStorage.getItem(COOLDOWN_KEY) || "0", 10);
+  const elapsed = Date.now() - last;
+  return Math.max(0, COOLDOWN_MS - elapsed);
+}
+
+function formatCooldown(ms) {
+  const mins = Math.floor(ms / 60000);
+  const secs = Math.floor((ms % 60000) / 1000);
+  return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+}
 
 export default function LibraryPage({ series, setSeries }) {
   const [addOpen, setAddOpen]               = useState(false);
@@ -25,6 +41,21 @@ export default function LibraryPage({ series, setSeries }) {
   const [sortBy, setSortBy]                 = useState("title");
   const [search, setSearch]                 = useState("");
   const [snack, setSnack]                   = useState({ open: false, message: "", severity: "success" });
+
+  // Refresh button state
+  const [refreshing, setRefreshing]         = useState(false);
+  const [cooldown, setCooldown]             = useState(getCooldownRemaining());
+
+  // Tick cooldown timer every second
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      const remaining = getCooldownRemaining();
+      setCooldown(remaining);
+      if (remaining <= 0) clearInterval(timer);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const showSnack = (msg, sev = "success") => setSnack({ open: true, message: msg, severity: sev });
 
@@ -59,13 +90,37 @@ export default function LibraryPage({ series, setSeries }) {
     }
   };
 
+  const handleRefresh = async () => {
+    if (cooldown > 0 || refreshing) return;
+    setRefreshing(true);
+    try {
+      const updated = await apiFetch("/library/refresh", { method: "POST" });
+      // Merge updated series data into state
+      if (Array.isArray(updated)) {
+        setSeries(prev => prev.map(s => {
+          const fresh = updated.find(u => u.id === s.id);
+          return fresh ? { ...s, ...fresh } : s;
+        }));
+        showSnack("Library refreshed!");
+      } else {
+        showSnack("Library refreshed!");
+      }
+      localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+      setCooldown(COOLDOWN_MS);
+    } catch (err) {
+      showSnack(err.message || "Refresh failed", "error");
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   const filtered = series.filter(s => {
     const ms = !search || s.title.toLowerCase().includes(search.toLowerCase());
     const mt = filterTab === 0 ? true
       : filterTab === 1 ? getUpcoming(s) > 0
       : filterTab === 2 ? getUpcoming(s) === 0 && s.status !== "Completed"
       : filterTab === 3 ? s.status === "Completed"
-      : s.rating === 5; // tab 4 = Favs
+      : s.rating === 5;
     return ms && mt;
   }).sort((a, b) => {
     if (sortBy === "title")    return a.title.localeCompare(b.title);
@@ -106,6 +161,27 @@ export default function LibraryPage({ series, setSeries }) {
           <TextField placeholder="Search series..." size="small" value={search} onChange={e => setSearch(e.target.value)} sx={{ flex: 1 }}
             InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ fontSize: 16, color: "#8A8398" }} /></InputAdornment> }} />
           <Box sx={{ display: "flex", gap: 1, flexShrink: 0 }}>
+
+            {/* Refresh button */}
+            <Tooltip title={cooldown > 0 ? `Cooldown: ${formatCooldown(cooldown)}` : "Refresh chapter data"}>
+              <span>
+                <Button
+                  variant="outlined" size="small"
+                  startIcon={refreshing ? <CircularProgress size={13} color="inherit" /> : <Refresh />}
+                  onClick={handleRefresh}
+                  disabled={cooldown > 0 || refreshing || series.length === 0}
+                  sx={{
+                    borderColor: cooldown > 0 ? "rgba(255,255,255,0.1)" : "rgba(127,28,226,0.4)",
+                    color: cooldown > 0 ? "#8A8398" : "#A855F7",
+                    fontSize: { xs: 11, md: 13 },
+                    "&:hover": { borderColor: "#7F1CE2", color: "#A855F7" },
+                    "&.Mui-disabled": { borderColor: "rgba(255,255,255,0.08)", color: "#8A8398" },
+                  }}>
+                  {cooldown > 0 ? formatCooldown(cooldown) : refreshing ? "Refreshing..." : "Refresh"}
+                </Button>
+              </span>
+            </Tooltip>
+
             <Button variant="outlined" size="small" startIcon={<FileDownload />} onClick={() => setExportOpen(true)}
               sx={{ borderColor: "rgba(255,255,255,0.15)", color: "#F0EAE0", fontSize: { xs: 11, md: 13 }, "&:hover": { borderColor: "#F5A623", color: "#F5A623" } }}>
               Export

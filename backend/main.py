@@ -7,6 +7,7 @@ from routers import library
 from services.scheduler import start_scheduler, stop_scheduler
 import logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+from routers import notifications
 
 app = FastAPI(title="AsuraSync API", version="1.0.0")
 
@@ -29,6 +30,7 @@ async def shutdown():
 app.include_router(user.router, prefix="/api/user")
 app.include_router(scrape.router, prefix="/api/scrape")
 app.include_router(library.router, prefix="/api/library")
+app.include_router(notifications.router, prefix="/api/notifications", tags=["notifications"])
 
 @app.get("/api/health")
 def health():
