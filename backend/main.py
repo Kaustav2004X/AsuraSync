@@ -55,3 +55,7 @@ async def manual_poll(user_id: str = Depends(get_current_user)):
     from fastapi.concurrency import run_in_threadpool
     await run_in_threadpool(poll_chapters)
     return {"message": "Poll complete"}
+
+@app.get("/api/health")
+def health():
+    return {"status": "ok"}
