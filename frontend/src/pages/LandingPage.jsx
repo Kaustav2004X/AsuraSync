@@ -12,6 +12,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
+import AsuraSyncLogo from "../assets/AsuraSync.png";
 
 const CSS = `
   @keyframes fadeUp      { from{opacity:0;transform:translateY(40px);}  to{opacity:1;transform:translateY(0);} }
@@ -273,7 +274,7 @@ export default function LandingPage() {
 
         <Box sx={{ textAlign:"center", mb:3 }}>
           <Box sx={{ width:52, height:52, borderRadius:2, overflow:"hidden", mx:"auto", mb:2, boxShadow:"0 8px 24px rgba(127,28,226,0.4)", animation:"pulse 2.5s infinite" }}>
-            <img src="/src/assets/AsuraSync.png" alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            <img src={AsuraSyncLogo} alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
           </Box>
           <Typography variant="h3" sx={{ fontSize:{ xs:30, md:38 }, color:tp, mb:0.5 }}>
             {forgotMode ? "RESET PASSWORD" : isLogin ? "WELCOME BACK" : otpSent ? "VERIFY EMAIL" : "JOIN THE VAULT"}
@@ -430,7 +431,7 @@ export default function LandingPage() {
         <Box sx={{ position:"relative", zIndex:10, px:{ xs:3, sm:6, md:10 }, py:{ xs:2.5, md:3 }, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <Box sx={{ display:"flex", alignItems:"center", gap:1.5, opacity:mounted?1:0, animation:mounted?"fadeIn 0.5s ease 0.2s both":"none" }}>
             <Box sx={{ width:40, height:40, borderRadius:1.5, overflow:"hidden", boxShadow:"0 4px 24px rgba(127,28,226,0.5)", animation:"pulse 2.5s infinite", flexShrink:0 }}>
-              <img src="/src/assets/AsuraSync.png" alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+              <img src={AsuraSyncLogo} alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
             </Box>
             <Typography sx={{ fontFamily:"'Bebas Neue', cursive", fontSize:{ xs:20, md:26 }, letterSpacing:"0.1em", color:tp }}>
               ASURA<Box component="span" sx={{ color:"#7F1CE2" }}>SYNC</Box>
@@ -620,7 +621,7 @@ export default function LandingPage() {
       <Box sx={{ borderTop:`1px solid ${border}`, px:{ xs:3, md:10 }, py:{ xs:3, md:4 }, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:2, background:"rgba(10,10,15,0.6)", backdropFilter:"blur(8px)" }}>
         <Box sx={{ display:"flex", alignItems:"center", gap:1.5 }}>
           <Box sx={{ width:30, height:30, borderRadius:1, overflow:"hidden", flexShrink:0 }}>
-            <img src="/src/assets/AsuraSync.png" alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            <img src={AsuraSyncLogo} alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
           </Box>
           <Typography sx={{ fontFamily:"'Bebas Neue', cursive", fontSize:18, letterSpacing:"0.1em", color:tp }}>
             ASURA<Box component="span" sx={{ color:"#7F1CE2" }}>SYNC</Box>

@@ -3,6 +3,7 @@ import { Box, Typography, TextField, Button, Paper, Alert, CircularProgress, Ico
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
+import AsuraSyncLogo from "../assets/AsuraSync.png";
 
 const P  = "#7F1CE2";
 const PD = "#5A0FB0";
@@ -70,7 +71,7 @@ export default function ResetPasswordPage() {
 
         <Box sx={{ textAlign:"center", mb:3 }}>
           <Box sx={{ width:52, height:52, borderRadius:2, overflow:"hidden", mx:"auto", mb:2, boxShadow:"0 8px 24px rgba(127,28,226,0.4)" }}>
-            <img src="/src/assets/AsuraSync.png" alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            <img src={AsuraSyncLogo} alt="AsuraSync" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
           </Box>
           <Typography sx={{ fontFamily:"'Bebas Neue', cursive", fontSize:32, color:"#F0EAE0", mb:0.5 }}>
             SET NEW PASSWORD

@@ -18,8 +18,8 @@ self.addEventListener("push", (event) => {
 
   const options = {
     body:    body   || "",
-    icon:    icon   || "/src/assets/AsuraSync.png",
-    badge:   badge  || "/src/assets/AsuraSync.png",
+    icon:    icon   || "/AsuraSync.png",
+    badge:   badge  || "/AsuraSync.png",
     tag:     tag    || "asurasync-notification",
     data:    { url: url || "/" },
     vibrate: [200, 100, 200],

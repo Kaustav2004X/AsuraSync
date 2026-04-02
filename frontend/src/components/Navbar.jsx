@@ -9,6 +9,8 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import AsuraSyncLogo from "../assets/AsuraSync.png";
+
 export default function Navbar({ user, totalUnread }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate  = useNavigate();
@@ -47,7 +49,7 @@ export default function Navbar({ user, totalUnread }) {
           {/* Logo */}
           <Box onClick={() => navigate("/library")} sx={{ display: "flex", alignItems: "center", gap: 1.5, cursor: "pointer", mr: 2 }}>
             <Box sx={{ width: 32, height: 32, borderRadius: 1, overflow: "hidden", flexShrink: 0 }}>
-              <img src="/src/assets/AsuraSync.png" alt="AsuraSync" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={AsuraSyncLogo} alt="AsuraSync" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </Box>
             <Typography sx={{ fontFamily: "'Bebas Neue', cursive", fontSize: 22, letterSpacing: "0.1em", display: { xs: "none", sm: "block" }, color: "text.primary" }}>
               ASURA<Box component="span" sx={{ color: "#7F1CE2" }}>SYNC</Box>
