@@ -8,6 +8,7 @@ from services.scheduler import start_scheduler, stop_scheduler
 import logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 from routers import notifications
+from fastapi import Request
 
 app = FastAPI(title="AsuraSync API", version="1.0.0")
 
@@ -58,4 +59,8 @@ async def manual_poll(user_id: str = Depends(get_current_user)):
 
 @app.get("/api/health")
 def health():
+    return {"status": "ok"}
+
+@app.api_route("/api/health", methods=["GET", "HEAD"])
+def health(request: Request):
     return {"status": "ok"}
